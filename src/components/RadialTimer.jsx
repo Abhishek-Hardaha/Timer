@@ -127,15 +127,15 @@ export default function RadialTimer({
         style={{ width: '450px', height: '450px', maxWidth: '88vw', maxHeight: '88vw' }}
         title={isRunning ? 'Click to pause' : 'Click to resume'}
       >
-        {/* Ambient Halo (Turns red in the last 2 minutes) */}
+        {/* Ambient Halo (Turns subtle red in the last 2 minutes) */}
         <div
           className="absolute inset-0 rounded-full pointer-events-none transition-all duration-1000"
           style={{
             background: isUrgent
-              ? 'radial-gradient(circle, rgba(239, 68, 68, 0.35) 0%, rgba(220, 38, 38, 0.12) 40%, transparent 68%)'
+              ? 'radial-gradient(circle, rgba(239, 68, 68, 0.16) 0%, rgba(220, 38, 38, 0.05) 40%, transparent 68%)'
               : 'radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 65%)',
             filter: 'blur(70px)',
-            opacity: introStep >= 1 ? (isRunning ? 0.85 : 0.4) : 0,
+            opacity: introStep >= 1 ? (isRunning ? 0.7 : 0.3) : 0,
             transform: introStep >= 1 ? 'scale(1)' : 'scale(0.85)'
           }}
         />
@@ -286,16 +286,16 @@ export default function RadialTimer({
             transform: introStep >= 4 ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.95)'
           }}
         >
-          {/* Main Time Digits - Turns vibrant glowing red in the last 2 mins */}
+          {/* Main Time Digits - Kept clean white */}
           <div
-            className="font-mono font-bold select-none tabular-nums tracking-tight leading-none"
+            className="font-mono font-bold text-white select-none tabular-nums tracking-tight leading-none"
             style={{
               fontSize: 'clamp(3.2rem, 8vw, 4.4rem)',
-              color: isUrgent ? '#ff3b30' : '#ffffff',
+              color: '#ffffff',
               textShadow: isUrgent
-                ? '0 0 22px rgba(255, 59, 48, 0.8), 0 0 55px rgba(239, 68, 68, 0.6), 0 0 95px rgba(220, 38, 38, 0.35)'
+                ? '0 0 25px rgba(255, 255, 255, 0.55), 0 0 50px rgba(239, 68, 68, 0.35)'
                 : '0 0 25px rgba(255, 255, 255, 0.45), 0 0 50px rgba(16, 185, 129, 0.18)',
-              transition: 'color 0.8s ease, text-shadow 0.8s ease'
+              transition: 'text-shadow 0.8s ease'
             }}
           >
             {formattedMinutes}:{formattedSeconds}

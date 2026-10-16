@@ -74,12 +74,12 @@ export default function Home() {
           {/* Prominent, elegant Dither background from React Bits (Turns red in last 2 mins) */}
           <div className="absolute inset-0 z-0 pointer-events-none opacity-80 transition-opacity duration-700">
             <Dither
-              waveColor={isUrgent ? [0.92, 0.08, 0.14] : [0.035, 0.36, 0.18]}
+              waveColor={isUrgent ? [0.34, 0.02, 0.05] : [0.035, 0.36, 0.18]}
               backgroundColor={[0.0, 0.0, 0.0]}
               ditherMode="bayer"
               colorNum={4}
               pixelSize={2}
-              waveSpeed={isUrgent ? 0.045 : 0.032}
+              waveSpeed={isUrgent ? 0.034 : 0.032}
               waveFrequency={2.5}
               waveAmplitude={0.32}
               contrast={1.18}
