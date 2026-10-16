@@ -40,11 +40,7 @@ export default function TimesUpPhase({ onRestart, onReplayIntro = undefined }) {
     <div className="relative w-full h-screen overflow-hidden bg-black text-white select-none">
       {/* Overtime Small Text Clock at the Corner */}
       <div
-        className="absolute top-5 left-5 z-20 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.25)] select-none transition-all duration-700"
-        style={{
-          opacity: textVisible ? 1 : 0,
-          transform: textVisible ? 'translateY(0)' : 'translateY(-10px)'
-        }}
+        className="absolute top-5 left-5 z-20 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.25)] select-none transition-all duration-300"
         title="Overtime elapsed"
       >
         <span className="relative flex h-2 w-2">

@@ -80,10 +80,7 @@ export default function RadialTimer({
     if (timeLeft === 0 && isRunning) {
       setIsRunning(false);
       sound.playAlarm();
-      const timer = setTimeout(() => {
-        onTimeUpRef.current?.();
-      }, 600);
-      return () => clearTimeout(timer);
+      onTimeUpRef.current?.();
     }
   }, [timeLeft, isRunning, soundEnabled, totalSeconds]);
 
@@ -301,8 +298,8 @@ export default function RadialTimer({
             {formattedMinutes}:{formattedSeconds}
           </div>
 
-          {/* Subtle pause micro-indicator when paused */}
-          {!isRunning && introStep >= 5 && (
+          {/* Subtle pause micro-indicator when paused (only while time remains) */}
+          {!isRunning && timeLeft > 0 && introStep >= 5 && (
             <div
               className={`mt-3.5 px-2.5 py-0.5 rounded-full border text-[9px] font-mono tracking-widest uppercase animate-pulse ${
                 isUrgent
