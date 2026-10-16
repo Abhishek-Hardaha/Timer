@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import IntroPhase from '@/components/IntroPhase';
 import Dither from '@/components/Dither';
 import RadialTimer from '@/components/RadialTimer';
@@ -20,6 +20,10 @@ export default function Home() {
 
   // Turn red in the last 2 minutes (<= 120 seconds)
   const isUrgent = remainingSecs <= 120 && phase === 'timer';
+
+  const handleTick = useCallback((rem: number) => {
+    setRemainingSecs(rem);
+  }, []);
 
   const handleIntroComplete = () => {
     setPhase('timer');
@@ -98,7 +102,7 @@ export default function Home() {
             totalSeconds={totalSeconds}
             onTimeUp={handleTimeUp}
             soundEnabled={soundEnabled}
-            onTick={(rem) => setRemainingSecs(rem)}
+            onTick={handleTick}
           />
         </div>
       )}

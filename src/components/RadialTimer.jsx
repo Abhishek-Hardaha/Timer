@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { sound } from '@/utils/sound';
 
 export default function RadialTimer({
@@ -13,6 +13,12 @@ export default function RadialTimer({
   const [isRunning, setIsRunning] = useState(false);
   // Intro stages: 0: initial, 1: glass plates, 2: ticks/rings, 3: arc sweep, 4: jewel & digits, 5: timer active
   const [introStep, setIntroStep] = useState(0);
+
+  const onTickRef = useRef(onTick);
+  onTickRef.current = onTick;
+
+  const onTimeUpRef = useRef(onTimeUp);
+  onTimeUpRef.current = onTimeUp;
 
   // Urgent mode in the last 2 minutes (120 seconds)
   const isUrgent = timeLeft <= 120;
@@ -41,39 +47,45 @@ export default function RadialTimer({
     };
   }, []);
 
-  // Sync if totalSeconds changes from settings or on mount
+  // Sync if totalSeconds changes from settings
   useEffect(() => {
     setTimeLeft(totalSeconds);
-    onTick?.(totalSeconds);
-  }, [totalSeconds, onTick]);
+  }, [totalSeconds]);
 
-  // Main countdown interval
+  // Safely inform parent of tick changes outside the render/updater cycle
+  useEffect(() => {
+    onTickRef.current?.(timeLeft);
+  }, [timeLeft]);
+
+  // Main countdown interval - pure state update
   useEffect(() => {
     let interval = null;
     if (isRunning && timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft(prev => {
-          const next = Math.max(0, prev - 1);
-          onTick?.(next);
-          if (soundEnabled) {
-            if (next <= 10 && next > 0) {
-              sound.playWarningTick();
-            } else if (next % 60 === 0 && next > 0) {
-              sound.playTick();
-            }
-          }
-          if (next === 0) {
-            sound.playAlarm();
-            setTimeout(() => {
-              onTimeUp?.();
-            }, 600);
-          }
-          return next;
-        });
+        setTimeLeft(prev => Math.max(0, prev - 1));
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, soundEnabled, onTimeUp, onTick]);
+  }, [isRunning, timeLeft]);
+
+  // Audio signals and timeup notification
+  useEffect(() => {
+    if (isRunning && soundEnabled && timeLeft > 0) {
+      if (timeLeft <= 10) {
+        sound.playWarningTick();
+      } else if (timeLeft % 60 === 0 && timeLeft !== totalSeconds) {
+        sound.playTick();
+      }
+    }
+    if (timeLeft === 0 && isRunning) {
+      setIsRunning(false);
+      sound.playAlarm();
+      const timer = setTimeout(() => {
+        onTimeUpRef.current?.();
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [timeLeft, isRunning, soundEnabled, totalSeconds]);
 
   // Click on the dial to pause or resume
   const togglePause = () => {
