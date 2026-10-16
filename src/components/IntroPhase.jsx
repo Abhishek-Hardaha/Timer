@@ -20,9 +20,10 @@ const PHRASES = [
 export default function IntroPhase({ onComplete }) {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [bgLoaded, setBgLoaded] = useState(false);
-  const slideDuration = 2000; // Exact 2 seconds duration as requested
 
   const currentPhrase = PHRASES[currentIdx];
+  // 2-line text lines like 'There are 5 OS / from 5 diffrent eras' get 3 seconds (3000ms); single lines get 2 seconds
+  const slideDuration = currentPhrase.includes('\n') ? 3000 : 2000;
 
   // The text appears after the background is loaded
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function IntroPhase({ onComplete }) {
     return () => clearTimeout(loadTimer);
   }, []);
 
-  // Slide advancement every 2 seconds
+  // Slide advancement with dynamic duration
   useEffect(() => {
     if (!bgLoaded) return;
     const timer = setTimeout(() => {
@@ -47,7 +48,7 @@ export default function IntroPhase({ onComplete }) {
     }, slideDuration);
 
     return () => clearTimeout(timer);
-  }, [currentIdx, bgLoaded, onComplete]);
+  }, [currentIdx, bgLoaded, onComplete, slideDuration]);
 
   // Click anywhere to immediately advance
   const handleScreenClick = () => {
